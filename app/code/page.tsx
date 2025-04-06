@@ -58,7 +58,7 @@ export default function CodePage() {
             {isSuccess
               ? "🎉 YES! De bankrekening is hersteld en EcoSmart is gered! 🎊"
               : isBlocked
-              ? "❌ Toegang geblokkeerd!"
+              ? "Toegang geblokkeerd!"
               : "Voer de geheime code in om het bedrijf te redden!"}
           </h1>
         </div>
