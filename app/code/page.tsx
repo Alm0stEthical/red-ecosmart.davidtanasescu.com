@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { gameConfig } from "@/config/game";
 
@@ -15,9 +15,18 @@ export default function CodePage() {
   const [attempts, setAttempts] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [collectedDigits, setCollectedDigits] = useState<string[]>([]);
 
   const correctCode = gameConfig.code;
   const maxAttempts = gameConfig.maxAttempts;
+
+  useEffect(() => {
+    // Retrieve collected digits from localStorage
+    const savedDigits = localStorage.getItem("collectedDigits");
+    if (savedDigits) {
+      setCollectedDigits(JSON.parse(savedDigits));
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +71,25 @@ export default function CodePage() {
               : "Voer de geheime code in om het bedrijf te redden!"}
           </h1>
         </div>
+
+        {/* Display collected code digits */}
+        {!isSuccess && !isBlocked && collectedDigits.length > 0 && (
+          <div className="p-4 bg-muted rounded-lg mb-4">
+            <p className="text-center font-medium mb-2">
+              Jouw verzamelde code cijfers:
+            </p>
+            <div className="flex justify-center gap-2">
+              {collectedDigits.map((digit, i) => (
+                <span
+                  key={i}
+                  className="flex w-8 h-8 bg-primary text-primary-foreground rounded-md items-center justify-center font-mono text-lg"
+                >
+                  {digit}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {!isSuccess && !isBlocked && (
           <form onSubmit={handleSubmit} className="space-y-4">

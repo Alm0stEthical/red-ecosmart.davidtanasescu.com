@@ -158,13 +158,11 @@ export default function PuzzlePage() {
     // First puzzle - allows retry with red screen
     if (currentPuzzle === 0) {
       if (isCorrect) {
-        toast.success("Correct! Op naar de volgende vraag.");
         setIsIncorrect(false);
         const nextPuzzle = currentPuzzle + 1;
         setCurrentPuzzle(nextPuzzle);
         setAnswer("");
       } else {
-        toast.error("Dat is niet het juiste antwoord. Probeer het nog eens!");
         setIsIncorrect(true);
       }
       return;
@@ -172,19 +170,20 @@ export default function PuzzlePage() {
 
     // For puzzles 2-4
     if (isCorrect) {
-      toast.success("Correct! Op naar de volgende vraag.");
       if (puzzle.codeDigit) {
         const newDigits = [...collectedDigits, puzzle.codeDigit];
         setCollectedDigits(newDigits);
+        localStorage.setItem("collectedDigits", JSON.stringify(newDigits));
       }
     } else {
-      toast.error("Dat is niet het juiste antwoord.");
+      // No toast error for questions 2-4
       // Give a wrong code digit when answering incorrectly
       if (puzzle.codeDigit) {
         // Generate a random incorrect digit (different from the correct one)
         const wrongDigit = generateWrongDigit(puzzle.codeDigit);
         const newDigits = [...collectedDigits, wrongDigit];
         setCollectedDigits(newDigits);
+        localStorage.setItem("collectedDigits", JSON.stringify(newDigits));
       }
     }
 
@@ -245,10 +244,8 @@ export default function PuzzlePage() {
               <p className="text-lg text-center">{puzzle.question}</p>
 
               {/* Error message */}
-              {isIncorrect && (
-                <Alert
-                  variant="destructive"
-                >
+              {isIncorrect && currentPuzzle === 0 && (
+                <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Fout</AlertTitle>
                   <AlertDescription>
