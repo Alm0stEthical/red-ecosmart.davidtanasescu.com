@@ -91,7 +91,6 @@ export default function CodePage() {
           </h1>
         </div>
 
-        {/* Display collected code digits */}
         {!isSuccess && !isBlocked && collectedDigits.length > 0 && (
           <div className="p-4 bg-muted rounded-lg mb-4">
             <p className="text-center font-medium mb-2">

@@ -231,7 +231,6 @@ export default function PuzzlePage() {
               </div>
               <p className="text-lg text-center">{puzzle.question}</p>
 
-              {/* Error message */}
               {isIncorrect && currentPuzzle === 0 && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
@@ -242,7 +241,6 @@ export default function PuzzlePage() {
                 </Alert>
               )}
 
-              {/* Show collected code digits */}
               {collectedDigits.length > 0 && (
                 <div className="mt-4 p-4 bg-muted rounded-lg">
                   <p className="text-center font-medium">
