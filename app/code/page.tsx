@@ -1,8 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -11,7 +15,7 @@ import { gameConfig } from "@/config/game";
 const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 export default function CodePage() {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState<string>("");
   const [attempts, setAttempts] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
@@ -37,6 +41,13 @@ export default function CodePage() {
       setIsSuccess(true);
       toast.success("🎉 Gefeliciteerd! Je hebt EcoSmart gered!");
       document.body.style.backgroundColor = "#22c55e";
+
+      // Clear ALL localStorage items when successfully completing the game
+      localStorage.removeItem("collectedDigits");
+      localStorage.removeItem("currentPuzzle");
+      localStorage.removeItem("startTime");
+      localStorage.removeItem("timeLeft");
+      setCollectedDigits([]);
     } else {
       const remainingAttempts = maxAttempts - (attempts + 1);
       setAttempts((prev) => prev + 1);
@@ -45,6 +56,13 @@ export default function CodePage() {
         setIsBlocked(true);
         toast.error("Je hebt geen pogingen meer over!");
         document.body.style.backgroundColor = "#ef4444";
+
+        // Clear ALL localStorage items when running out of attempts
+        localStorage.removeItem("collectedDigits");
+        localStorage.removeItem("currentPuzzle");
+        localStorage.removeItem("startTime");
+        localStorage.removeItem("timeLeft");
+        setCollectedDigits([]);
       } else {
         toast.error(
           `Onjuiste code! Nog ${remainingAttempts} ${
@@ -55,6 +73,11 @@ export default function CodePage() {
     }
 
     setCode("");
+  };
+
+  // Handle OTP input change
+  const handleOTPChange = (value: string) => {
+    setCode(value);
   };
 
   return (
@@ -94,21 +117,30 @@ export default function CodePage() {
         {!isSuccess && !isBlocked && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="code">Code:</Label>
-              <Input
-                id="code"
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={3}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                placeholder="Voer de 3-cijferige code in..."
-                required
-                className="text-center text-2xl tracking-widest"
-              />
+              <Label htmlFor="code-input" className="text-center block">
+                Code:
+              </Label>
+              <div className="flex justify-center">
+                <InputOTP
+                  id="code-input"
+                  maxLength={3}
+                  value={code}
+                  onChange={handleOTPChange}
+                  className="gap-2"
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
             </div>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={code.length !== 3}
+            >
               Controleer code
             </Button>
           </form>
