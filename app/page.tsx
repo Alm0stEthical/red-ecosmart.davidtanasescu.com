@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 export default function Home() {
   useEffect(() => {
-    // Reset all game progress when starting over
     localStorage.removeItem("timeLeft");
     localStorage.removeItem("startTime");
     localStorage.removeItem("collectedDigits");

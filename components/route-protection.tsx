@@ -15,7 +15,6 @@ export function RouteProtection({ children }: { children: React.ReactNode }) {
       if (currentIndex === -1) return;
 
       if (currentIndex > 0) {
-        // Check puzzle progress for /puzzel page
         if (pathname === "/puzzel") {
           const startTime = localStorage.getItem("startTime");
           if (!startTime) {
@@ -24,7 +23,6 @@ export function RouteProtection({ children }: { children: React.ReactNode }) {
           }
         }
 
-        // Check for /code page access
         if (pathname === "/code") {
           const collectedDigits = localStorage.getItem("collectedDigits");
           const digits = collectedDigits ? JSON.parse(collectedDigits) : [];

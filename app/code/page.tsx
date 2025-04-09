@@ -25,7 +25,6 @@ export default function CodePage() {
   const maxAttempts = gameConfig.maxAttempts;
 
   useEffect(() => {
-    // Retrieve collected digits from localStorage
     const savedDigits = localStorage.getItem("collectedDigits");
     if (savedDigits) {
       setCollectedDigits(JSON.parse(savedDigits));
@@ -42,7 +41,6 @@ export default function CodePage() {
       toast.success("🎉 Gefeliciteerd! Je hebt EcoSmart gered!");
       document.body.style.backgroundColor = "#22c55e";
 
-      // Clear ALL localStorage items when successfully completing the game
       localStorage.removeItem("collectedDigits");
       localStorage.removeItem("currentPuzzle");
       localStorage.removeItem("startTime");
@@ -57,7 +55,6 @@ export default function CodePage() {
         toast.error("Je hebt geen pogingen meer over!");
         document.body.style.backgroundColor = "#ef4444";
 
-        // Clear ALL localStorage items when running out of attempts
         localStorage.removeItem("collectedDigits");
         localStorage.removeItem("currentPuzzle");
         localStorage.removeItem("startTime");
@@ -75,7 +72,6 @@ export default function CodePage() {
     setCode("");
   };
 
-  // Handle OTP input change
   const handleOTPChange = (value: string) => {
     setCode(value);
   };

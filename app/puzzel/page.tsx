@@ -77,7 +77,6 @@ export default function PuzzlePage() {
   const [isIncorrect, setIsIncorrect] = useState(false);
   const router = useRouter();
 
-  // Initialize timer and load saved state
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -96,7 +95,6 @@ export default function PuzzlePage() {
 
     setTimeLeft(initialTime);
 
-    // Load saved puzzle progress
     const savedPuzzle = localStorage.getItem("currentPuzzle");
     const savedDigits = localStorage.getItem("collectedDigits");
 
@@ -110,7 +108,6 @@ export default function PuzzlePage() {
     setIsLoading(false);
   }, []);
 
-  // Handle timer
   useEffect(() => {
     if (isLoading) return;
 
@@ -135,7 +132,6 @@ export default function PuzzlePage() {
     return () => clearInterval(timer);
   }, [timeLeft, router, isLoading]);
 
-  // Persist puzzle progress
   useEffect(() => {
     if (isLoading) return;
 
@@ -155,7 +151,6 @@ export default function PuzzlePage() {
     const isCorrect =
       String(puzzle.correctAnswer).toLowerCase() === answer.toLowerCase();
 
-    // First puzzle - allows retry with red screen
     if (currentPuzzle === 0) {
       if (isCorrect) {
         setIsIncorrect(false);
@@ -168,7 +163,6 @@ export default function PuzzlePage() {
       return;
     }
 
-    // For puzzles 2-4
     if (isCorrect) {
       if (puzzle.codeDigit) {
         const newDigits = [...collectedDigits, puzzle.codeDigit];
@@ -176,10 +170,7 @@ export default function PuzzlePage() {
         localStorage.setItem("collectedDigits", JSON.stringify(newDigits));
       }
     } else {
-      // No toast error for questions 2-4
-      // Give a wrong code digit when answering incorrectly
       if (puzzle.codeDigit) {
-        // Generate a random incorrect digit (different from the correct one)
         const wrongDigit = generateWrongDigit(puzzle.codeDigit);
         const newDigits = [...collectedDigits, wrongDigit];
         setCollectedDigits(newDigits);
@@ -187,7 +178,6 @@ export default function PuzzlePage() {
       }
     }
 
-    // Proceed to next puzzle regardless of correctness for puzzles 2-4
     const nextPuzzle = currentPuzzle + 1;
     if (nextPuzzle === puzzles.length) {
       router.push("/code");
@@ -197,12 +187,10 @@ export default function PuzzlePage() {
     }
   };
 
-  // Helper function to generate a wrong digit
   const generateWrongDigit = (correctDigit: string): string => {
     const possibleDigits = "0123456789";
     let wrongDigit = correctDigit;
 
-    // Keep generating until we get a different digit
     while (wrongDigit === correctDigit) {
       const randomIndex = Math.floor(Math.random() * possibleDigits.length);
       wrongDigit = possibleDigits[randomIndex];
@@ -288,7 +276,6 @@ export default function PuzzlePage() {
                     type="number"
                     value={answer}
                     onChange={(e) => {
-                      // Remove spaces, commas, periods, and other non-numeric characters
                       const cleanValue = e.target.value.replace(/[^0-9]/g, "");
                       setAnswer(cleanValue);
                     }}
